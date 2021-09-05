@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const errorHandler = require('./controller/error');
+const AppClass = require('./utils/AppError')
 
 app.use(express.json());
 
@@ -10,11 +12,12 @@ app.get('/', (req, res) => {
     });
 });
 
-app.all('*', (req, res) => {
-    res.status(200).json({
-        status: 'Unhandled'
-    })
+app.all('*', (req, res, next) => {
+
+    next(new AppClass('Error', 404));
 });
+
+app.use(errorHandler);
 
 // Running
 app.listen(3000, () => {
